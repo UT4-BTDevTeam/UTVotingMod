@@ -6,7 +6,7 @@ Currently this mutator disables each voted map for a configurable amount of subs
 More options may come in the future for configuring different rotation systems, depending on the demand.
 
 ### Install
-Paste the repository in
+Paste the repository folder in
 ```
 UTServer/UnrealTournament/Plugins/
 ```
