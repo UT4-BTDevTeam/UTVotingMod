@@ -14,7 +14,6 @@ Make sure the result path looks like this :
 ```
 UTServer/UnrealTournament/Plugins/UTVotingMod/Binaries/Linux/libUE4Server-UTVotingMod-Linux-Shipping.so
 ```
-You can remove the binaries folder that does not match your architecture.
 
 ### Mutator
 ```
