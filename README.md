@@ -22,6 +22,12 @@ UTServer/UnrealTournament/Plugins/UTVotingMod/Binaries/Linux/libUE4Server-UTVoti
 ```
 
 ### Enable mutator
+**(recommended)** Use the blueprint loader, so clients will be able to see the mutator in "Custom" screen after downloading it once. You must install `MutAddVotingMod-WindowsNoEditor.pak` like any other blueprint mutator (redirect reference etc.) !
+[Get it from UTCC](https://utcc.unrealpugs.com/mutator/651-Mapvote-Rotation-(plugin)).
+```
+Mutator=MutAddVotingMod
+```
+**(or)** Load the native mutator directly - no redirect is required as nothing is sent to clients. Players will never see the mutator in "Custom" screen.
 ```
 Mutator=UTVotingMod.UTVotingMod
 ```
