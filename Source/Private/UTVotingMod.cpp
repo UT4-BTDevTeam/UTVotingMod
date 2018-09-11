@@ -5,43 +5,49 @@
 AUTVotingMod::AUTVotingMod(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
 }
 
-TArray<FString> AUTVotingMod::LocalList;
+TArray<FString> AUTVotingMod::LockoutList;
 
-void AUTVotingMod::Tick(float DeltaSeconds)
+void AUTVotingMod::Init_Implementation(const FString& Options)
 {
-	if (bAlteredMapList || RemoveMapCount == 0)
-		return;
+	MapLockoutDuration = FMath::Clamp(UGameplayStatics::GetIntOption(Options, "MapLockoutDuration", MapLockoutDuration), 0, 999);
+	RandomSubsetSize = FMath::Clamp(UGameplayStatics::GetIntOption(Options, "RandomSubsetSize", RandomSubsetSize), 0, 999);
 
-	UWorld* World = GetWorld();
-	if (World != nullptr)
+	Super::Init_Implementation(Options);
+}
+
+void AUTVotingMod::NotifyMatchStateChange_Implementation(FName NewState)
+{
+	if (NewState == MatchState::MapVoteHappening)
 	{
-		AUTGameMode* GameMode = Cast<AUTGameMode>(UGameplayStatics::GetGameMode(this));
-		AUTGameState* GameState = World->GetGameState<AUTGameState>();
-		if ( GameMode != nullptr && GameState != nullptr)
+		UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: MAP VOTE HAPPENING"));
+
+		AUTGameState* GameState = GetWorld()->GetGameState<AUTGameState>();
+		if (GameState != nullptr)
 		{
 			TArray<AUTReplicatedMapInfo*>& VoteList = GameState->MapVoteList;
-			if (VoteList.Num() > 0)
-			{
-				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: CONFIG RemoveMapCount: %i"), RemoveMapCount);
-				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: PRE ALTER MAP LIST (%i)"), VoteList.Num());
 
+			UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: PRE ALTER MAP LIST (%i)"), VoteList.Num());
+
+			// 1. Lockout
+			UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: CONFIG MapLockoutDuration: %i"), MapLockoutDuration);
+			if (MapLockoutDuration > 0)
+			{
 				FString CurrentMap = UUTGameplayStatics::GetLevelName(this, false);
 				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: CURRENT MAP '%s'"), *CurrentMap);
 
-				LocalList.Push(CurrentMap);
-				while (LocalList.Num() > RemoveMapCount)
-					LocalList.RemoveAt(0);
+				LockoutList.Push(CurrentMap);
+				while (LockoutList.Num() > MapLockoutDuration)
+					LockoutList.RemoveAt(0);
 
-				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: LOCAL LIST SIZE: %i"), LocalList.Num());
+				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: LOCKOUT LIST SIZE: %i"), LockoutList.Num());
 
-				for (int32 i = 0; i < LocalList.Num(); i++)
+				for (int32 i = 0; i < LockoutList.Num(); i++)
 				{
 					for (int32 j = 0; j < VoteList.Num(); j++)
 					{
-						if (VoteList[j]->MapPackageName == LocalList[i])
+						if (VoteList[j]->MapPackageName == LockoutList[i])
 						{
 							UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: REMOVING MAP '%s'"), *(VoteList[j]->MapPackageName));
 							VoteList.RemoveAt(j);
@@ -49,12 +55,20 @@ void AUTVotingMod::Tick(float DeltaSeconds)
 						}
 					}
 				}
-				GameState->MapVoteListCount = VoteList.Num();
-
-				bAlteredMapList = true;
-
-				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: POST ALTER MAP LIST (%i)"), VoteList.Num());
 			}
+
+			// 2. Subset
+			UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: CONFIG RandomSubsetSize: %i"), RandomSubsetSize);
+			if (RandomSubsetSize > 0)
+			{
+				while (VoteList.Num() > RandomSubsetSize)
+					VoteList.RemoveAt(FMath::RandRange(0, VoteList.Num() - 1));
+			}
+
+			GameState->MapVoteListCount = VoteList.Num();
+			UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: POST ALTER MAP LIST (%i)"), VoteList.Num());
 		}
 	}
+
+	Super::NotifyMatchStateChange_Implementation(NewState);
 }

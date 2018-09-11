@@ -11,12 +11,13 @@ class AUTVotingMod : public AUTMutator
 {
 	GENERATED_UCLASS_BODY()
 
-	static TArray<FString> LocalList;
+	static TArray<FString> LockoutList;
 
 	UPROPERTY(Config)
-	int32 RemoveMapCount;
+	int32 MapLockoutDuration;
+	UPROPERTY(Config)
+	int32 RandomSubsetSize;
 
-	bool bAlteredMapList = false;
-
-	virtual void Tick(float DeltaSeconds) override;
+	void Init_Implementation(const FString& Options) override;
+	void NotifyMatchStateChange_Implementation(FName NewState) override;
 };
