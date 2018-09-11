@@ -27,14 +27,14 @@ Mutator=UTVotingMod.UTVotingMod
 ```
 
 ### Configuration
-In rulesets :
+in rulesets :
 ```
 ?MapLockoutDuration=5?RandomSubsetSize=9
 ```
-In Game.ini
+in Game.ini
 ```ini
 [/Script/UTVotingMod.UTVotingMod]
 MapLockoutDuration=5
 RandomSubsetSize=9
 ```
-You can use a value of 0 to disable either feature.
+Use a value of 0 to disable either feature.
