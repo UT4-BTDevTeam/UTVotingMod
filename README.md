@@ -1,7 +1,7 @@
 # UTVotingMod
 UT4 serverside plugin to improve mapvote rotation.
 
-Currently this mutator disables each voted map for a configurable amount of subsequent matches. For example with a value of 3, when DM-Cheops is voted, it will not appear in the maplist anymore until 3 more maps are played. With a value of 1, only the current map will always be stripped from the list.
+Currently this mutator disables each voted map for a configurable amount of subsequent matches. For example with a value of 10, when DM-Cheops is voted, it will not appear in the maplist anymore until 10 more maps are played. With a value of 1, only the current map will always be stripped from the list.
 
 More options may come in the future for configuring different rotation systems, depending on the demand.
 
