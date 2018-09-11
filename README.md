@@ -1,11 +1,17 @@
 # UTVotingMod
 UT4 serverside plugin to improve mapvote rotation.
 
-Currently this mutator disables each voted map for a configurable amount of subsequent matches. For example with a value of 10, when DM-Cheops is voted, it will not appear in the maplist anymore until 10 more maps are played. With a value of 1, only the current map will always be stripped from the list.
+### Map lockout
+If enabled, disables each voted map for the desired amount of subsequent matches. For example with a value of 5, when DM-Cheops is voted, it will not appear in the maplist anymore until 5 more maps are played.
 
-More options may come in the future for configuring different rotation systems, depending on the demand.
+### Random subset
+If enabled, the mod will automatically trim the maplist down to the desired size, picking random maps in the list.
+This is similar to when the game selects 3 random maps at 10 seconds left, except here it happens right from the start.
+Can be combined with map lockout.
 
-### Install
+## Installing
+
+### Plugin
 Paste the repository folder in
 ```
 UTServer/UnrealTournament/Plugins/
@@ -15,13 +21,20 @@ Make sure the result path looks like this :
 UTServer/UnrealTournament/Plugins/UTVotingMod/Binaries/Linux/libUE4Server-UTVotingMod-Linux-Shipping.so
 ```
 
-### Mutator
+### Enable mutator
 ```
-UTVotingMod.UTVotingMod
+Mutator=UTVotingMod.UTVotingMod
 ```
 
-### Game.ini
+### Configuration
+In rulesets :
+```
+?MapLockoutDuration=5?RandomSubsetSize=9
+```
+In Game.ini
 ```ini
 [/Script/UTVotingMod.UTVotingMod]
-RemoveMapCount=10
+MapLockoutDuration=5
+RandomSubsetSize=9
 ```
+You can use a value of 0 to disable either feature.
