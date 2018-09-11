@@ -12,18 +12,17 @@ Can be combined with map lockout.
 ## Installing
 
 ### Plugin
-Paste the repository folder in
+Download repository ZIP, extract, and paste the entire folder into :
 ```
 UTServer/UnrealTournament/Plugins/
 ```
 Make sure the result path looks like this :
 ```
-UTServer/UnrealTournament/Plugins/UTVotingMod/Binaries/Linux/libUE4Server-UTVotingMod-Linux-Shipping.so
+UTServer/UnrealTournament/Plugins/UTVotingMod-master/Binaries/Linux/libUE4Server-UTVotingMod-Linux-Shipping.so
 ```
 
 ### Enable mutator
-**(recommended)** Use the blueprint loader, so clients will be able to see the mutator in "Custom" screen after downloading it once. You must install `MutAddVotingMod-WindowsNoEditor.pak` like any other blueprint mutator (redirect reference etc.) !
-[Get it from UTCC](https://utcc.unrealpugs.com/mutator/651-Mapvote-Rotation-(plugin)).
+**(recommended)** Use the blueprint loader, so clients will be able to see the mutator in "Custom" screen after downloading it once. You must install [MutAddVotingMod-WindowsNoEditor.pak](https://utcc.unrealpugs.com/mutator/651-Mapvote-Rotation-(plugin)) like any other blueprint mutator (redirect reference etc.) !
 ```
 Mutator=MutAddVotingMod
 ```
@@ -33,14 +32,15 @@ Mutator=UTVotingMod.UTVotingMod
 ```
 
 ### Configuration
-in rulesets :
+Via ruleset options :
 ```
 ?MapLockoutDuration=5?RandomSubsetSize=9
 ```
-in Game.ini
+Via Game.ini :
 ```ini
 [/Script/UTVotingMod.UTVotingMod]
 MapLockoutDuration=5
 RandomSubsetSize=9
 ```
+Options have priority over ini config.
 Use a value of 0 to disable either feature.
