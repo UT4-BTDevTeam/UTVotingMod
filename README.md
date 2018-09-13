@@ -5,7 +5,7 @@ UT4 serverside plugin to improve mapvote rotation.
 If enabled, disables each voted map for an amount of subsequent matches. For example with a value of 3, when DM-Cheops is voted, it will not appear in the maplist anymore until 3 more maps are played.
 
 ### Random subset
-If enabled, only a subset of the full map list will appear in the voting screen. The subset is selected randomly every match.
+If enabled, only a subset of the full map list appears in the voting screen. The subset is selected randomly every match.
 This is similar to when the game selects 3 random maps at 10 seconds left, except here it happens right from the start.
 Can be combined with map lockout.
 
