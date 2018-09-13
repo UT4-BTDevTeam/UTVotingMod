@@ -2,7 +2,7 @@
 UT4 serverside plugin to improve mapvote rotation.
 
 ### Map lockout
-If enabled, disables each voted map for an amount of subsequent matches. For example with a value of 5, when DM-Cheops is voted, it will not appear in the maplist anymore until 5 more maps are played.
+If enabled, disables each voted map for an amount of subsequent matches. For example with a value of 3, when DM-Cheops is voted, it will not appear in the maplist anymore until 3 more maps are played.
 
 ### Random subset
 If enabled, only a subset of the full map list will appear in the voting screen. The subset is selected randomly every match.
@@ -34,12 +34,12 @@ Mutator=UTVotingMod.UTVotingMod
 ### Configuration
 Via ruleset options :
 ```
-?MapLockoutDuration=5?RandomSubsetSize=9
+?MapLockoutDuration=3?RandomSubsetSize=9
 ```
 Via Game.ini :
 ```ini
 [/Script/UTVotingMod.UTVotingMod]
-MapLockoutDuration=5
+MapLockoutDuration=3
 RandomSubsetSize=9
 ```
 Options have priority over ini config.
