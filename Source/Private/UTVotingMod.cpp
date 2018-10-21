@@ -2,6 +2,9 @@
 
 #include "UnrealTournament.h"
 
+#define DEBUGLOG Verbose
+//#define DEBUGLOG Log
+
 AUTVotingMod::AUTVotingMod(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -21,27 +24,27 @@ void AUTVotingMod::NotifyMatchStateChange_Implementation(FName NewState)
 {
 	if (NewState == MatchState::MapVoteHappening)
 	{
-		UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: MAP VOTE HAPPENING"));
+		UE_LOG(LogBlueprintUserMessages, DEBUGLOG, TEXT("VotingMod: MAP VOTE HAPPENING"));
 
 		AUTGameState* GameState = GetWorld()->GetGameState<AUTGameState>();
 		if (GameState != nullptr)
 		{
 			TArray<AUTReplicatedMapInfo*>& VoteList = GameState->MapVoteList;
 
-			UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: PRE ALTER MAP LIST (%i)"), VoteList.Num());
+			UE_LOG(LogBlueprintUserMessages, DEBUGLOG, TEXT("VotingMod: PRE ALTER MAP LIST (%i)"), VoteList.Num());
 
 			// 1. Lockout
 			UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: CONFIG MapLockoutDuration: %i"), MapLockoutDuration);
 			if (MapLockoutDuration > 0)
 			{
 				FString CurrentMap = UUTGameplayStatics::GetLevelName(this, false);
-				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: CURRENT MAP '%s'"), *CurrentMap);
+				UE_LOG(LogBlueprintUserMessages, DEBUGLOG, TEXT("VotingMod: CURRENT MAP '%s'"), *CurrentMap);
 
 				LockoutList.Push(CurrentMap);
 				while (LockoutList.Num() > MapLockoutDuration)
 					LockoutList.RemoveAt(0);
 
-				UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: LOCKOUT LIST SIZE: %i"), LockoutList.Num());
+				UE_LOG(LogBlueprintUserMessages, DEBUGLOG, TEXT("VotingMod: LOCKOUT LIST SIZE: %i"), LockoutList.Num());
 
 				for (int32 i = 0; i < LockoutList.Num(); i++)
 				{
@@ -49,7 +52,7 @@ void AUTVotingMod::NotifyMatchStateChange_Implementation(FName NewState)
 					{
 						if (VoteList[j]->MapPackageName == LockoutList[i])
 						{
-							UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: REMOVING MAP '%s'"), *(VoteList[j]->MapPackageName));
+							UE_LOG(LogBlueprintUserMessages, DEBUGLOG, TEXT("VotingMod: REMOVING MAP '%s'"), *(VoteList[j]->MapPackageName));
 							VoteList.RemoveAt(j);
 							break;
 						}
@@ -66,7 +69,7 @@ void AUTVotingMod::NotifyMatchStateChange_Implementation(FName NewState)
 			}
 
 			GameState->MapVoteListCount = VoteList.Num();
-			UE_LOG(LogBlueprintUserMessages, Log, TEXT("VotingMod: POST ALTER MAP LIST (%i)"), VoteList.Num());
+			UE_LOG(LogBlueprintUserMessages, DEBUGLOG, TEXT("VotingMod: POST ALTER MAP LIST (%i)"), VoteList.Num());
 		}
 	}
 
